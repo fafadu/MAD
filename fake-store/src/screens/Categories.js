@@ -6,6 +6,9 @@ import colors from '../constants/colors';
 
 
 export const Categories = () => {
+
+  const navigation = useNavigation();
+
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +36,7 @@ export const Categories = () => {
       onPress={() => {
         // 此处处理点击事件，比如导航到相应分类的产品列表
         console.log('Pressed', item.title);
-        // navigation.navigate('ProductList', { category: item.title });
+        navigation.navigate('Productlist', { category: item.title });
       }}
     >
       <Text style={styles.title}>{item.title}</Text>
