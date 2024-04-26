@@ -1,38 +1,17 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const categories = [
-  { id: '1', title: 'Electronics' },
-  { id: '2', title: 'Jewelery' },
-  { id: '3', title: 'Men\'s Clothing' },
-  { id: '4', title: 'Women\'s Clothing' },
-];
-
-const CategoryItem = ({ title, onPress }) => (
-  <TouchableOpacity onPress={onPress} style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </TouchableOpacity>
-);
-
-const CategoriesScreen = ({ navigation }) => {
-  const renderItem = ({ item }) => (
-    <CategoryItem
-      title={item.title}
-      onPress={() => console.log('Pressed on ' + item.title)}
-    />
-  );
+export const Categories =()=>{
+  
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Categories</Text>
-      <FlatList
-        data={categories}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -60,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoriesScreen;
+// export default CategoriesScreen;
