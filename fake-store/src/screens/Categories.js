@@ -35,8 +35,10 @@ export const Categories = () => {
       style={styles.item}
       onPress={() => {
         // 此处处理点击事件，比如导航到相应分类的产品列表
-        console.log('Pressed', item.title);
+        // console.log('Pressed', item.title);
+        // 这里使用 navigation.navigate 方法，将类别名称作为参数传递给 ProductList 屏幕
         navigation.navigate('Productlist', { category: item.title });
+        
       }}
     >
       <Text style={styles.title}>{item.title}</Text>
