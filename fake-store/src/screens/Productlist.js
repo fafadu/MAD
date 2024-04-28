@@ -49,8 +49,12 @@ export const Productlist = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.categoryHeader}>
+        <Text style={styles.categoryHeaderText}>{category}</Text>
+      </View>
+
       {loading ? (
-        <ActivityIndicator size="large" color={colors.darkBlue} />
+        <ActivityIndicator size="large" color={colors.black} />
       ) : (
         <FlatList
           data={products}
@@ -59,11 +63,14 @@ export const Productlist = () => {
           contentContainerStyle={styles.listContainer}
         />
       )}
-
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
-      
+      <View style={styles.buttonContainer}>
+        <Button 
+          title="Back" 
+          iconName="arrow-back" // 使用Ionicons中的图标名称
+          onPress={() => navigation.goBack()} 
+        />
+      </View>
+        
     </View>
     
   );
@@ -73,8 +80,9 @@ export const Productlist = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: 50, // Adjust the margin as needed
+      paddingTop: 0, // 由 marginTop 改为 paddingTop，防止 marginTop 影响子视图布局
       backgroundColor: colors.white,
+      
     },
     itemContainer: {
       flexDirection: 'row',
@@ -104,10 +112,15 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 15,
       fontWeight: 'bold',
-      flexShrink: 1, // 允许文本在必要时收缩
+      flexShrink: 1, // 允许文本在必要时收缩 
     },
     price: {
       fontSize: 15,
+  },
+  buttonContainer: {
+    justifyContent: 'center', // 水平居中按钮
+    padding: 10,
+    width: '100%', 
   },
   backButton: {
     padding: 10,
@@ -131,6 +144,19 @@ backButtonText: {
       borderColor: colors.grey,
     },
    
+
+    categoryHeader: {
+      marginHorizontal: 16,
+      padding: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.grey, // 或者选择其他背景颜色
+    },
+    categoryHeaderText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.black,
+    },
   });
   
   

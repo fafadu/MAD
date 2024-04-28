@@ -34,22 +34,40 @@ export const Productdetail = () => {
   
     return (
       <View style={styles.container}>
+        
          {loading ? (
       <ActivityIndicator size="large" color={colors.grey} />
     ) : (
       <View>
 
-        <Text style={styles.title}>{product.title}</Text>
         <Image source={{ uri: product.image }} style={styles.image} />
-        <Text>Price: ${product.price}</Text>
-        
-       
-        <View style={styles.descriptionContainer}>
-        <ScrollView>
-          <Text style={styles.description}>{product.description}</Text>
-        </ScrollView>
+        <Text style={styles.title}>{product.title}</Text>
+        <View style={styles.detailsBox}>
+
+            <Text style={styles.detailText}>Rate: {product.rating?.rate}</Text>
+            <Text style={styles.detailText}>Sold: {product.rating?.count}</Text>
+            <Text style={styles.detailText}>Price: ${product.price}</Text>
+          
         </View>
-        <TButton title="Back" back={true}/>
+        <View style={styles.buttonGroup}>
+          <Button 
+            title="Back" 
+            iconName="arrow-back" // 使用Ionicons中的图标名称
+            onPress={() => navigation.goBack()} 
+          />
+          <Button 
+            title="Add to Cart" 
+            iconName="cart" // 修改为你的购物车图标名称
+            onPress={() => console.log('Add to cart pressed')} // 这里实现添加到购物车的逻辑
+          />
+        </View>
+  
+        <View style={styles.descriptionContainer}>
+          <ScrollView>
+            <Text style={styles.description}>{product.description}</Text>
+          </ScrollView>
+        </View>
+      
       </View>
     )}
       </View>
@@ -94,9 +112,9 @@ export const Productdetail = () => {
       },
       descriptionContainer: {
         flex: 1,  // 使得容器占满剩余空间
-        minHeight: 150, // 这将确保容器至少有100单位的高度
+        minHeight: 100, // 这将确保容器至少有100单位的高度
         padding: 5,
-        // marginVertical: 10,  // 在描述上下添加空间
+        marginVertical: 10,  // 在描述上下添加空间
         marginHorizontal:10,
         borderWidth: 1,
         borderColor: colors.black,
@@ -106,6 +124,31 @@ export const Productdetail = () => {
       description: {
         fontSize: 16,
         color: colors.black,  // 颜色可以根据需要调整
+      },
+
+      detailsBox: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        padding: 10,
+        marginVertical: 10,
+        marginHorizontal: 10,
+        borderWidth: 1,
+        borderColor: colors.grey,
+        borderRadius: 5,
+        backgroundColor: colors.lightBlue,
+      },
+   
+      detailText: {
+        fontSize: 16,
+        color: colors.black,
+        marginLeft: 5, // Spacing between icon and text
+      },
+
+      buttonGroup: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
       },
   });
   

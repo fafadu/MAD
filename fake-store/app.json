@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
 
     "splash": {
-      "image": "./assets/fake.jpg",
+      "image": "./assets/fake1.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
