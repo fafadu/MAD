@@ -3,8 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList,ActivityIndicator,Image,ScrollView } from 'react-native';
 import colors from '../constants/colors';
-import { ImgButton } from '../coponents/ImgButton';
-import { TButton } from '../coponents/TButton';
+import { Button } from '../coponents/Button';
 
 
 export const Productdetail = () => {
@@ -39,10 +38,12 @@ export const Productdetail = () => {
       <ActivityIndicator size="large" color={colors.grey} />
     ) : (
       <View>
+
         <Text style={styles.title}>{product.title}</Text>
+        <Image source={{ uri: product.image }} style={styles.image} />
         <Text>Price: ${product.price}</Text>
         
-        <Image source={{ uri: product.image }} style={styles.image} />
+       
         <View style={styles.descriptionContainer}>
         <ScrollView>
           <Text style={styles.description}>{product.description}</Text>
@@ -59,7 +60,7 @@ export const Productdetail = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      marginTop: 50, // Adjust the margin as needed
+      marginTop: 0, // Adjust the margin as needed
       backgroundColor: colors.white,
     },
     header: {
