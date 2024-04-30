@@ -28,7 +28,7 @@ export const ProductDetail = ({ route }) => {
           component={Order}
           // 如果 Order 屏幕有额外的选项，也可以在这里添加
           options={{
-            tabBarLabel: 'Product Detail',
+            tabBarLabel: 'Order',
             tabBarIcon: ({ size, color }) => (<AntDesign name="shoppingcart"  size={size} color={color} />),
           }}
         />
@@ -63,20 +63,3 @@ const ProductDetailCom = ({ navigation, route }) => {
     },
     // 你可以根据需要扩展更多的样式
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
