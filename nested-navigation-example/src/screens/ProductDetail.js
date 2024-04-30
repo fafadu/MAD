@@ -1,5 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Order } from './Order';
@@ -13,12 +16,21 @@ export const ProductDetail = ({ route }) => {
           name="ProdDetCom"
           component={ProductDetailCom}
           initialParams={{ prod: route.params.prod }}
-          options={{ headerShown: false, tabBarLabel: 'Product Detail' }}
+          options={{ 
+            headerShown: false,
+            tabBarLabel: 'Product Detail',
+            tabBarIcon: ({ size, color }) => (<MaterialIcons name="description" size={size} color={color} />),
+            // tabBarIcon: ({ size, color }) => (<Ionicons name="home" size={size} color={color} />),
+          }}
         />
         <Tabs.Screen
           name="Order"
           component={Order}
           // 如果 Order 屏幕有额外的选项，也可以在这里添加
+          options={{
+            tabBarLabel: 'Product Detail',
+            tabBarIcon: ({ size, color }) => (<AntDesign name="shoppingcart"  size={size} color={color} />),
+          }}
         />
       </Tabs.Navigator>
     );
