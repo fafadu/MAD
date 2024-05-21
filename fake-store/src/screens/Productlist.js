@@ -1,9 +1,11 @@
+//Productlist.js
 import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, FlatList, TouchableOpacity,StyleSheet, ActivityIndicator,Image } from 'react-native';
 import colors from '../constants/colors';
 import { Button } from '../coponents/Button';
+import { fetchProductsByCategory } from '../services/apiServices';
 
 
 export const Productlist = () => {
@@ -15,20 +17,19 @@ export const Productlist = () => {
     const { category } = route.params;  // route.params 包含了传递给该屏幕的所有参数
   
   useEffect(() => {
-    const fetchProducts = async () => {
+    const getProducts = async () => {
       try {
-        const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
-        const data = await response.json();
-        setProducts(data);
+          const data = await fetchProductsByCategory(category);
+          setProducts(data);
+          setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
-      } finally {
-        setLoading(false);
+          setLoading(false);
+          console.error(error);
       }
     };
 
-    fetchProducts();
-  }, [category]);  // 当 category 改变时，重新运行这个 useEffect
+      getProducts();
+    }, [category]);// 当 category 改变时，重新运行这个 useEffect
 
 
   const renderProductItem = ({ item }) => (

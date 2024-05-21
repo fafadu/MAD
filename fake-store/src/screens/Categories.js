@@ -1,51 +1,50 @@
+// Categories.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList,ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import colors from '../constants/colors';
-
+import { fetchCategories } from '../services/apiServices';
+import { capitalizeFirstLetter } from '../utils/stringUtils';
 
 export const Categories = () => {
 
   const navigation = useNavigation();
-
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://fakestoreapi.com/products/categories');
-        const data = await response.json();
-        console.log(data)
-        setCategories(data.map((category) => ({ id: category, title: category })));
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
       } catch (error) {
-        console.error(error);
+        console.error('Failed to load categories:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
+
 
   const renderCategoryItem = ({ item }) => (
     <TouchableOpacity
       style={styles.item}
       onPress={() => {
-        // 此处处理点击事件，比如导航到相应分类的产品列表
-        // console.log('Pressed', item.title);
         // 这里使用 navigation.navigate 方法，将类别名称作为参数传递给 ProductList 屏幕
         navigation.navigate('Productlist', { category: item.title });
         
       }}
     >
-      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>{capitalizeFirstLetter(item.title)}</Text>
     </TouchableOpacity>
   );
 
   return (
+    
     <View style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color={colors.darkBlue} />
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 
