@@ -8,7 +8,7 @@ export default function App() {
 
   const handleEcho = async () => {
     try {
-      const url = `http://10.0.2.2:3000/echo?msg=${message}`;
+      const url = `http://10.0.2.2:3000/echo?msg=${encodeURIComponent(message)}`;
       const res = await fetch(url);
       const data = await res.json();
       setResponse(`Status: ${data.status}, Message: ${data.message}`);
@@ -21,16 +21,16 @@ export default function App() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Echo Client</Text>
       <Text style={styles.description}>
-        Enter a message below and press "Echo" to send it to the Echo Server.
+        Enter a message below to Echo Server.
       </Text>
       <TextInput
         style={styles.input}
         multiline
-        placeholder="Enter your message here"
+        placeholder="Please enter message..."
         value={message}
         onChangeText={setMessage}
       />
-      <Button title="Echo" onPress={handleEcho} />
+      <Button title="Echo!" onPress={handleEcho} />
       {response ? <Text style={styles.response}>{response}</Text> : null}
     </ScrollView>
   );
