@@ -4,16 +4,19 @@ import { Platform } from 'react-native';
 
 export default function App() {
   const [message, setMessage] = useState('');
-  const [response, setResponse] = useState('');
+  const [status, setStatus] = useState('');
+  const [echoMessage, setEchoMessage] = useState('');
 
   const handleEcho = async () => {
     try {
       const url = `http://10.0.2.2:3000/echo?msg=${encodeURIComponent(message)}`;
       const res = await fetch(url);
       const data = await res.json();
-      setResponse(`Status: ${data.status}, Message: ${data.message}`);
+      setStatus(`Status: ${data.status}`);
+      setEchoMessage(data.message);
     } catch (error) {
-      setResponse('Error: Could not connect to server');
+      setStatus('Error: Could not connect to server');
+      setEchoMessage('');
     }
   };
 
@@ -31,7 +34,12 @@ export default function App() {
         onChangeText={setMessage}
       />
       <Button title="Echo!" onPress={handleEcho} />
-      {response ? <Text style={styles.response}>{response}</Text> : null}
+      {status ? (
+        <View style={styles.responseContainer}>
+          <Text style={styles.responseText}>{status}</Text>
+          <Text style={styles.responseText}>{echoMessage}</Text>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
@@ -61,9 +69,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlignVertical: 'top',
   },
-  response: {
+  responseContainer: {
     marginTop: 20,
+  },
+  responseText: {
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: 'left',
   },
 });
