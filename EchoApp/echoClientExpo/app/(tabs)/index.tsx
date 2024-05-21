@@ -1,48 +1,69 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
-
-
 import { Platform } from 'react-native';
 
-const server =
-  Platform.OS === "android" ? "http://10.0.2.2" : "http://localhost";
-const port = 3000;
-
-export const fetchWelcomePage = async () => {
-  try {
-    const url = `${server}:${port}`;
-    const res = await fetch(url);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching welcome page", error);
-    return { title: "Error", message: "failed to fetch welcome page." };
-  }
-};
-
-
 export default function App() {
-  const [content, setContent] = useState({ title: "Unknown", message: "N/A" });
+  const [message, setMessage] = useState('');
+  const [response, setResponse] = useState('');
 
-  useEffect(() => {
-    const fetchPage = async () => {
-      const res = await fetchWelcomePage();
-      setContent(res);
-    };
-    fetchPage();
-  }, []);
+  const handleEcho = async () => {
+    try {
+      const url = `http://10.0.2.2:3000/echo?msg=${message}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      setResponse(`Status: ${data.status}, Message: ${data.message}`);
+    } catch (error) {
+      setResponse('Error: Could not connect to server');
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text>Title: {content.title}</Text>
-      <Text>Message: {content.message}</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Echo Client</Text>
+      <Text style={styles.description}>
+        Enter a message below and press "Echo" to send it to the Echo Server.
+      </Text>
+      <TextInput
+        style={styles.input}
+        multiline
+        placeholder="Enter your message here"
+        value={message}
+        onChangeText={setMessage}
+      />
+      <Button title="Echo" onPress={handleEcho} />
+      {response ? <Text style={styles.response}>{response}</Text> : null}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    height: 100,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    padding: 10,
+    textAlignVertical: 'top',
+  },
+  response: {
+    marginTop: 20,
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
