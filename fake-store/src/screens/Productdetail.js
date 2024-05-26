@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList,ActivityIndicator,Image,ScrollView } from 'react-native';
 import colors from '../constants/colors';
-import { Button } from '../coponents/Button';
+import { Button } from '../components/Button';
 
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
