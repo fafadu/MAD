@@ -1,45 +1,39 @@
-// src/screens/SignUpScreen.js
+// src/screens/SignInScreen.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { userSignedUp } from '../store/userSlice';
-import { signUp } from '../services/fetchService';
+import { userSignedIn } from '../store/userSlice';
+import { signIn } from '../services/fetchService';
 
-const SignUpScreen = () => {
+const SignInScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     if (!validateEmail(email)) {
       Alert.alert('Invalid email.');
       return;
     }
-  
+
     if (!validatePassword(password)) {
       Alert.alert('Password must contain at least one uppercase letter, one lowercase letter, and one digit. The minimum length of the password is 8 characters.');
       return;
     }
 
-    if (name.trim() === '') {
-      Alert.alert('Name cannot be empty.');
-      return;
-    }
-  
     try {
-      const data = await signUp(name, email, password);
-      console.log('Sign up data:', data);  // 打印成功响应数据以进行调试
-      dispatch(userSignedUp(data)); // 使用 Redux action 将用户信息存储到 Redux store
-      Alert.alert('Success', 'Account created successfully');
-      navigation.navigate('SignIn');
+      const data = await signIn(email, password);
+      console.log('Sign in data:', data);
+      dispatch(userSignedIn(data)); // Redux action to store user info
+      Alert.alert('Success', 'Logged in successfully');
+      navigation.navigate('UserProfile');
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', error.message);
     }
-  }
+  };
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -51,21 +45,9 @@ const SignUpScreen = () => {
     return re.test(password);
   };
 
-  const clearFields = () => {
-    setName('');
-    setEmail('');
-    setPassword('');
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign up a new user</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
+      <Text style={styles.title}>Sign in</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -79,16 +61,11 @@ const SignUpScreen = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={clearFields}>
-          <Text style={styles.buttonText}>Clear</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-        <Text style={styles.switchText}>Switch to: sign in with an existing user</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.switchText}>Don't have an account? Sign up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -105,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16,
     textAlign: 'center',
-    color: '#fff',
+    color: '#000',
   },
   input: {
     height: 40,
@@ -115,27 +92,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     backgroundColor: '#fff',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   button: {
     backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 5,
+    marginVertical: 10,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
   },
   switchText: {
-    marginTop: 10,
     textAlign: 'center',
     color: '#007BFF',
   }
 });
 
-export default SignUpScreen;
+export default SignInScreen;

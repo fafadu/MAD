@@ -2,6 +2,7 @@
 
 const API_BASE_URL = "https://fakestoreapi.com";
 
+
 // Fetch Products By Category
 export const fetchProductsByCategory = async (category) => {
     try {

@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import colors from '../constants/colors';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from '../coponents/Button';
+import { Button } from '../components/Button';
 import { removeFromCart, addToCart } from '../store/cartSlice';
 
 export const Cart = () => {
