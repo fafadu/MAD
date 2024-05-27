@@ -39,7 +39,8 @@ const SignInScreen = () => {
     }));
      
       Alert.alert('Success', 'Logged in successfully');
-      navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login
+      // navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login
+      navigation.navigate('BottomTabs');
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', error.message);

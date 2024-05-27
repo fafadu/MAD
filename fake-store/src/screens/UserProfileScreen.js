@@ -19,12 +19,13 @@ const UserProfileScreen = () => {
     console.log('User data in UserProfileScreen:', user);
   }, [user]);
 
+
   const handleSignOut = () => {
     dispatch(userSignedOut());
     navigation.navigate('SignIn');
   };
 
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async() => {
     if (!name || !password) {
       Alert.alert('Error', 'Name and password cannot be empty.');
       return;
@@ -34,7 +35,7 @@ const UserProfileScreen = () => {
       .unwrap()
       .then(() => {
         Alert.alert('Success', 'Profile updated successfully');
-        setModalVisible(false); // Close the modal on success
+        setModalVisible(false); 
       })
       .catch((err) => {
         Alert.alert('Error', err.message);

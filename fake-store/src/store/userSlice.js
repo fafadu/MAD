@@ -67,6 +67,7 @@ const userSlice = createSlice({
           state.user = {
             ...state.user,
             name: action.payload.name, 
+           
           };
           console.log('Redux state after update:', state.user);
         })

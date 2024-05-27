@@ -21,11 +21,18 @@ import UserProfileScreen from './src/screens/UserProfileScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-
+const ProductStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Categories" component={Categories} />
+    <Stack.Screen name="Productlist" component={Productlist} />
+    <Stack.Screen name="Productdetail" component={Productdetail} />
+  </Stack.Navigator>
+);
 
 const BottomTabNavigator = () => {
   const cartItemCount = useSelector(state => state.cart.totalItems);
   const user = useSelector(state => state.user.user);
+
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen 
@@ -58,30 +65,18 @@ const BottomTabNavigator = () => {
 };
 
 
-const ProductStack = () => (
-  <Stack.Navigator>
-    <Stack.Screen name="Categories" component={Categories} />
-    <Stack.Screen name="Productlist" component={Productlist} />
-    <Stack.Screen name="Productdetail" component={Productdetail} />
+
+
+
+
+const AppNavigator = () => (
+  <Stack.Navigator initialRouteName="SignIn">
+    <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
+    <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
+    <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false }} />
+    <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile' }} />
   </Stack.Navigator>
 );
-
-
-
-function AppNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
-      <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'UserProfileScreen'}} />
-      <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
-     
-      
-    </Stack.Navigator>
-  );
-}
-
-
 
 
 export default function App() {
