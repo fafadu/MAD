@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 import { userSignedIn } from '../store/userSlice';
 import { signIn } from '../services/fetchService';
 
@@ -11,8 +11,10 @@ const SignInScreen = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { loading, error } = useSelector(state => state.user);
 
   const handleSignIn = async () => {
+    
     if (!validateEmail(email)) {
       Alert.alert('Invalid email.');
       return;
@@ -27,7 +29,15 @@ const SignInScreen = () => {
       const data = await signIn(email, password);
       console.log('Sign in data:', data);
 
-      dispatch(userSignedIn({ user: data.user, token: data.token }));
+      dispatch(userSignedIn({
+        user:{
+         id: data.id,
+         name: data.name,
+         email: data.email,
+         },
+         token: data.token
+    }));
+     
       Alert.alert('Success', 'Logged in successfully');
       navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login
     } catch (error) {

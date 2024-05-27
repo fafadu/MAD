@@ -37,14 +37,15 @@ export const signIn = async (email, password) => {
         },
         body: JSON.stringify({ email, password })
       });
+
+      const data = await response.json();
   
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error data:', errorData);
-        throw new Error(`Failed to sign in: ${response.status} ${response.statusText}`);
+      if (response.status !== 200 || data.status !== 'OK') {
+        
+        throw new Error(data.message || 'Failed to sign in');
       }
   
-      const data = await response.json();
+      
       console.log('Sign in successful:', data);
       return data;
     } catch (error) {
@@ -52,3 +53,30 @@ export const signIn = async (email, password) => {
       throw error;
     }
   };
+
+  export const updateUserProfile = async (token, name, password) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ name, password })
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error data:', errorData);
+        throw new Error(`Failed to update profile: ${response.status} ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log('Profile update successful:', data);
+      return data;
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      throw error;
+    }
+  };
+
