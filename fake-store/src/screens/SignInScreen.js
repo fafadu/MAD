@@ -26,9 +26,10 @@ const SignInScreen = () => {
     try {
       const data = await signIn(email, password);
       console.log('Sign in data:', data);
-      dispatch(userSignedIn(data)); // Redux action to store user info
+
+      dispatch(userSignedIn({ user: data.user, token: data.token }));
       Alert.alert('Success', 'Logged in successfully');
-      navigation.navigate('UserProfile');
+      navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', error.message);

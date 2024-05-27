@@ -1,72 +1,42 @@
-// src/screens/SignInScreen.js
+// src/screens/UserProfileScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { userSignedIn } from '../store/userSlice';
-import { signIn } from '../services/fetchService';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSignedOut } from '../store/userSlice';
 
-const SignInScreen = () => {
+const UserProfileScreen = () => {
+  const user = useSelector((state) => state.user.user);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
 
-  const handleSignIn = async () => {
-    if (!validateEmail(email)) {
-      Alert.alert('Invalid email.');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      Alert.alert('Password must contain at least one uppercase letter, one lowercase letter, and one digit. The minimum length of the password is 8 characters.');
-      return;
-    }
-
-    try {
-      const data = await signIn(email, password);
-      console.log('Sign in data:', data);
-      dispatch(userSignedIn(data)); // Redux action to store user info
-      Alert.alert('Success', 'Logged in successfully');
-      navigation.navigate('UserProfile', { user: data }); // 传递 user 对象
-    } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', error.message);
-    }
-  };
-
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return re.test(password);
+  const handleSignOut = () => {
+    dispatch(userSignedOut());
+    navigation.navigate('SignIn');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign in</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.switchText}>Don't have an account? Sign up</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>User Profile</Text>
+      <View>
+        <Text style={styles.text}>User Name: {user.username}</Text>
+        <Text style={styles.text}>Email: {user.email}</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('UpdateProfile')}
+          >
+            <Text style={styles.buttonText}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={handleSignOut}
+          >
+            <Text style={styles.buttonText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -84,29 +54,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#000',
   },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
+  text: {
+    fontSize: 18,
     marginBottom: 12,
-    paddingHorizontal: 8,
-    backgroundColor: '#fff',
+    textAlign: 'center',
+    color: '#000',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
   button: {
     backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    marginVertical: 10,
+    flex: 1,
+    marginHorizontal: 5,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
   },
-  switchText: {
-    textAlign: 'center',
-    color: '#007BFF',
-  }
 });
 
-export default SignInScreen;
+export default UserProfileScreen;
