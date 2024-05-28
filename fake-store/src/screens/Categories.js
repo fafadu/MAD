@@ -56,6 +56,7 @@ export const Categories = () => {
           contentContainerStyle={styles.listContainer}
         />
       )}
+      <Text>Jinghwa Tu</Text>
     </View>
   );
 };

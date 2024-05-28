@@ -1,15 +1,18 @@
-// // // src/screens/Order.js
+// src/screens/Order.js
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet,Button, Alert, TouchableOpacity, Image } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { fetchOrders } from '../services/fetchService';
 import { setNewOrders } from '../store/newOrdersSlice'; // 引入新的action
 import { MaterialIcons } from '@expo/vector-icons';
+
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [isExpandedNewOder, setIsExpandedNewOder] = useState(false);
   const [expandedOrdersId, setExpandedOrdersId] = useState({});
+  const [isExpandedPaidOrder, setIsExpandedPaidOrder] = useState(false);
+  const [isExpandedDeliveredOrder, setIsExpandedDeliveredOrder] = useState(false);
   const newOrders = useSelector(state => state.newOrders.orders);
   const token = useSelector(state => state.user.token);
 
@@ -23,10 +26,10 @@ const Orders = () => {
     try {
       console.log('Fetching orders...(Order.js)');
       const data = await fetchOrders(token);
-      console.log('Fetched orders:', data);  // 添加此行以打印返回的数据
+      console.log('Fetched orders:');  // 添加此行以打印返回的数据
       if (data.status === 'OK') {
         setOrders(data.orders);
-        console.log('Orders set to state(Order.js)', data.orders);
+        console.log('Orders set to state(Order.js)');
   
       } else {
         Alert.alert('Error', data.message);
@@ -43,6 +46,8 @@ const Orders = () => {
       [orderId]: !prevState[orderId]
     }));
   };
+
+  
 
   const renderOrderItem = ({ item }) => (
     <View>
@@ -75,7 +80,10 @@ const Orders = () => {
         <Button title="Pay" onPress style={styles.payButton} />
         </View>
       )}
+        
     </View>
+
+    
   );
 };
 
