@@ -52,15 +52,14 @@ const Orders = () => {
         </Text>
         <MaterialIcons name={expandedOrdersId[item.id] ? 'expand-less' : 'expand-more'} size={24} color="black" />
       </TouchableOpacity>
-
-    
-      
     </View>
   );
 
   
   return (
     <View style={styles.container}>
+      <Text style={styles.pageTitle}>My Orders</Text>
+       {/* New Orders */}
       <TouchableOpacity style={styles.header} onPress={() => setIsExpandedNewOder(!isExpandedNewOder)}>
         <Text style={styles.headerText}>New Orders: {orders.length}</Text>
         <MaterialIcons name={isExpandedNewOder ? 'expand-less' : 'expand-more'} size={24} color="white" />
@@ -94,6 +93,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  pageTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
   },
   orderHeader: {
     flexDirection: 'row',
