@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch ,useSelector} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { userSignedIn } from '../store/userSlice';
 import { signIn } from '../services/fetchService';
 
@@ -11,52 +11,24 @@ const SignInScreen = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const { loading, error } = useSelector(state => state.user);
 
   const handleSignIn = async () => {
-    
-    if (!validateEmail(email)) {
-      Alert.alert('Invalid email.');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      Alert.alert('Password must contain at least one uppercase letter, one lowercase letter, and one digit. The minimum length of the password is 8 characters.');
-      return;
-    }
-
     try {
       const data = await signIn(email, password);
-      console.log('signinscreen Sign in data:', data);
-
-      dispatch(userSignedIn({ user: data, token: data.token }));
-
-    //   dispatch(userSignedIn({
-    //     user:{
-    //      id: data.id,
-    //      name: data.name,
-    //      email: data.email,
-    //      },
-    //      token: data.token
-    // }));
-     
-      Alert.alert('Success', 'Logged in successfully');
-      // navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login
-      navigation.navigate('BottomTabs');
+      console.log('Sign in data:', data);
+      if (data.token) {
+        const userData = { user: { name: data.name, email: data.email, id: data.id }, token: data.token };
+        console.log('User data to store:', userData);
+        dispatch(userSignedIn(userData));
+        Alert.alert('Success', 'Logged in successfully');
+        navigation.navigate('BottomTabs');
+      } else {
+        Alert.alert('Error', data.message);
+      }
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', error.message);
     }
-  };
-
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return re.test(password);
   };
 
   return (
@@ -118,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   switchText: {
-    textAlign: 'center',
+    textAlign: 'center', 
     color: '#007BFF',
   }
 });

@@ -1,14 +1,80 @@
-// src/screens/Cart.js
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import colors from '../constants/colors';
+// Cart.js
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from '../components/Button';
-import { removeFromCart, addToCart } from '../store/cartSlice';
+import { removeFromCart, addToCart, clearCart, setCart } from '../store/cartSlice';
+import { updateCart, fetchCartItems, submitOrder,fetchOrders } from '../services/fetchService';
+import { setNewOrders,addNewOrder } from '../store/newOrdersSlice';
+import { useNavigation } from '@react-navigation/native';
+import { createOrder } from '../services/fetchService';
 
-export const Cart = () => {
+const Cart = () => {
   const cart = useSelector(state => state.cart);
+  const user = useSelector(state => state.user.user);
+  const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (user && token) {
+      loadCartItems();
+    }
+  }, [user, token]);
+
+  const loadCartItems = async () => {
+    try {
+      console.log('Fetching cart items...(Cart.js)');
+      const data = await fetchCartItems(token);
+      console.log('Fetched cart items:');
+      if (data.status === 'OK') {
+        dispatch(setCart(data.items));
+        console.log('Cart items set to Redux(Cart.js)');
+      } else {
+        Alert.alert('Error', data.message);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch cart items');
+      console.error('Error fetching cart items:', error);
+    }
+  };
+
+  const handleRemoveFromCart = async (item) => {
+    dispatch(removeFromCart(item));
+    console.log('Item removed from Redux cart(Cart.js)');
+    try {
+      await updateCart(token, cart.items);
+      console.log('Cart updated to API(Cart.js)');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update cart');
+      console.error('Error updating cart:', error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const orderItems = cart.items.map(item => ({
+        prodID: item.id,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        title: item.title
+      }));
+      dispatch(addNewOrder(orderItems)); 
+
+      const data = await createOrder(token, orderItems);
+      console.log('Order created:(Cart.js)');
+      if (data.status === 'OK') {
+        dispatch(clearCart());
+        Alert.alert('Success', 'Order has been placed');
+        navigation.navigate('Order');
+      } else {
+        Alert.alert('Error', data.message);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to place order');
+      console.error('Error placing order:', error);
+    }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -21,7 +87,7 @@ export const Cart = () => {
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
           <Text style={styles.quantity}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => dispatch(removeFromCart(item))}>
+          <TouchableOpacity onPress={() => handleRemoveFromCart(item)}>
             <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>
         </View>
@@ -31,27 +97,28 @@ export const Cart = () => {
 
   const renderEmptyContainer = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Your shopping cart is empty</Text>
+      <Text style={styles.emptyText}>Your Cart is Empty</Text>
     </View>
   );
 
-
   return (
     <View style={styles.container}>
-    
       <View style={styles.cartTitle}>
-        <Text style={styles.cartTitleText}>Shopping cart</Text>
+        <Text style={styles.cartTitleText}>Shopping Cart</Text>
       </View>
       <FlatList
         data={cart.items}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
-        ListEmptyComponent={renderEmptyContainer}  // This will render when the list is empty
+        ListEmptyComponent={renderEmptyContainer}
       />
       {cart.items.length > 0 && (
         <>
           <Text style={styles.summaryText}>Total Items: {cart.totalItems}</Text>
           <Text style={styles.summaryText}>Total Price: ${cart.totalPrice.toFixed(2)}</Text>
+          <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+            <Text style={styles.checkoutButtonText}>Check Out</Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -110,7 +177,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 200,  // Adjust this value as needed
+    marginTop: 200,
   },
   emptyText: {
     fontSize: 20,
@@ -120,11 +187,23 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.grey, // 或者选择其他背景颜色
+    backgroundColor: '#f0f0f0',
   },
   cartTitleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.black,
+  },
+  checkoutButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  checkoutButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
+
+export default Cart;

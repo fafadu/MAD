@@ -1,23 +1,21 @@
 // App.js
-import React, { useEffect } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "./src/store/store";
-import { userSignedIn } from './src/store/userSlice';
-
+import { MaterialIcons } from "@expo/vector-icons";
 // Screens
-import { Categories } from './src/screens/Categories';
-import { Productlist } from './src/screens/Productlist';
-import { Productdetail } from './src/screens/Productdetail';
-import { Cart } from './src/screens/Cart';
+import Categories from './src/screens/Categories';
+import Productlist from './src/screens/Productlist';
+import Productdetail from './src/screens/Productdetail';
+import Cart from './src/screens/Cart';
 import SignUpScreen from './src/screens/SignUpScreen';
 import SignInScreen from './src/screens/SignInScreen';
 import UserProfileScreen from './src/screens/UserProfileScreen';
+import Orders from "./src/screens/Order";
 
-// Navigation setup
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -26,6 +24,12 @@ const ProductStack = () => (
     <Stack.Screen name="Categories" component={Categories} />
     <Stack.Screen name="Productlist" component={Productlist} />
     <Stack.Screen name="Productdetail" component={Productdetail} />
+  </Stack.Navigator>
+);
+
+const UserProfileStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="UserProfile" component={UserProfileScreen} />
   </Stack.Navigator>
 );
 
@@ -53,10 +57,18 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="UserProfileScreen" 
-        component={user ? UserProfileScreen : SignInScreen} 
+        name="Order" 
+        component={Orders} 
         options={{
-          tabBarLabel: ' Profile',
+          tabBarLabel: 'Orders',
+          tabBarIcon: ({ color, size }) => (<MaterialIcons name="person" size={size} color={color} />)
+        }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={UserProfileStack} 
+        options={{
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (<MaterialIcons name="person" size={size} color={color} />)
         }}
       />
@@ -64,20 +76,13 @@ const BottomTabNavigator = () => {
   );
 };
 
-
-
-
-
-
 const AppNavigator = () => (
   <Stack.Navigator initialRouteName="SignIn">
     <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
     <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false }} />
-    {/* <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile' }} /> */}
   </Stack.Navigator>
 );
-
 
 export default function App() {
   return (
@@ -88,4 +93,3 @@ export default function App() {
     </Provider>
   );
 }
-

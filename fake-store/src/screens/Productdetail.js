@@ -6,14 +6,20 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList,ActivityIndicator,Im
 import colors from '../constants/colors';
 import { Button } from '../components/Button';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector  } from 'react-redux';
 import { addToCart } from '../store/cartSlice';
+import { updateCart } from '../services/fetchService';
+
 import { fetchProductById } from '../services/apiServices';
+
+
 
 export const Productdetail = () => {
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const token = useSelector(state => state.user.token);
+    const cartItems = useSelector(state => state.cart.items);
   
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -34,9 +40,16 @@ export const Productdetail = () => {
       getProduct();
     }, [id]);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async() => {
       dispatch(addToCart({ ...product, quantity: 1 })); // 假设每次添加1个
-      ;
+      console.log('Item added to Redux cart:(Productdetails.js)');
+      
+      try {
+        const response = await updateCart(token, cartItems);
+        console.log('Cart updated to API:(Productdetails.js)');
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      }
     };
 
   
@@ -160,4 +173,4 @@ export const Productdetail = () => {
       },
   });
   
-  
+  export default Productdetail;

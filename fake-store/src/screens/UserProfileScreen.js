@@ -54,9 +54,9 @@ const UserProfileScreen = () => {
   //   return <ActivityIndicator size="large" color="#0000ff" />;
   // }
 
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
+  // if (error) {
+  //   return <Text>Error: {error}</Text>;
+  // }
 
   return (
     <View style={styles.container}>
