@@ -11,7 +11,7 @@ const SignInScreen = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loading, error } = useSelector(state => state.user);
+  // const { loading, error } = useSelector(state => state.user);
 
   const handleSignIn = async () => {
     
@@ -27,16 +27,18 @@ const SignInScreen = () => {
 
     try {
       const data = await signIn(email, password);
-      console.log('Sign in data:', data);
+      console.log('signinscreen Sign in data:', data);
 
-      dispatch(userSignedIn({
-        user:{
-         id: data.id,
-         name: data.name,
-         email: data.email,
-         },
-         token: data.token
-    }));
+      dispatch(userSignedIn({ user: data, token: data.token }));
+
+    //   dispatch(userSignedIn({
+    //     user:{
+    //      id: data.id,
+    //      name: data.name,
+    //      email: data.email,
+    //      },
+    //      token: data.token
+    // }));
      
       Alert.alert('Success', 'Logged in successfully');
       // navigation.navigate('UserProfileScreen'); // Navigate to UserProfile page after successful login

@@ -74,7 +74,7 @@ const AppNavigator = () => (
     <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign In' }} />
     <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Sign Up' }} />
     <Stack.Screen name="BottomTabs" component={BottomTabNavigator} options={{ headerShown: false }} />
-    <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile' }} />
+    {/* <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} options={{ title: 'User Profile' }} /> */}
   </Stack.Navigator>
 );
 

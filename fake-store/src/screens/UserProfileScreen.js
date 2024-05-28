@@ -7,9 +7,13 @@ import Modal from 'react-native-modal';
 import { userSignedOut, updateUser } from '../store/userSlice';
 
 const UserProfileScreen = () => {
-  const { user, token, loading, error } = useSelector((state) => state.user);
+  // const { user, token, loading, error } = useSelector((state) => state.user);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user.user);
+  const token = useSelector(state => state.user.token);
+
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [password, setPassword] = useState('');
@@ -46,9 +50,9 @@ const UserProfileScreen = () => {
     setModalVisible(!isModalVisible);
   };
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  // if (loading) {
+  //   return <ActivityIndicator size="large" color="#0000ff" />;
+  // }
 
   if (error) {
     return <Text>Error: {error}</Text>;
