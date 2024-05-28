@@ -1,6 +1,6 @@
 // // // src/screens/Order.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet,Button, Alert, TouchableOpacity, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import { fetchOrders } from '../services/fetchService';
 import { setNewOrders } from '../store/newOrdersSlice'; // 引入新的action
@@ -64,12 +64,16 @@ const Orders = () => {
         <Text style={styles.headerText}>New Orders: {orders.length}</Text>
         <MaterialIcons name={isExpandedNewOder ? 'expand-less' : 'expand-more'} size={24} color="white" />
       </TouchableOpacity>
+
       {isExpandedNewOder && (
+        <View>
         <FlatList
           data={orders}
           renderItem={renderOrderItem}
           keyExtractor={item => item.id.toString()}
         />
+        <Button title="Pay" onPress style={styles.payButton} />
+        </View>
       )}
     </View>
   );
